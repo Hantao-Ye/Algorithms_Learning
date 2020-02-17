@@ -1,4 +1,4 @@
-
+package Ch_1;
 class Solution {
     public boolean rotation(String s, String t) {
         if (s.length() != t.length())
