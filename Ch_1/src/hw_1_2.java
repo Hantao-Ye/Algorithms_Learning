@@ -1,4 +1,5 @@
 package Ch_1.src;
+
 class Solution {
     public boolean rotation(String s, String t) {
         if (s.length() != t.length())
@@ -47,7 +48,36 @@ class SmartDate {
     private final int day;
     private final int year;
 
-    public SmartDate(int m, int d, int y) throws Exception {
+    public SmartDate(int m, int d, int y) {
+        if (y < 0)
+            throw new IllegalArgumentException("The year is illegal!");
+        if (m > 12 || m < 1)
+            throw new IllegalArgumentException("The month is illegal!");
+        if (d > 32)
+            throw new IllegalArgumentException("The day is illegal!");
+        if (d == 31 && m != 1 && m != 3 && m != 5 && m != 7 && m != 8 && m != 10 && m != 12)
+            throw new IllegalArgumentException("The day is illegal!");
+        if (m == 2) {
+            if (y % 400 == 0 || (y % 4 == 0 && y % 100 != 0))
+                if (d > 29)
+                    throw new IllegalArgumentException("The day is illegal!");
+                else if (d > 28)
+                    throw new IllegalArgumentException("The day is illegal!");
+        }
+        month = m;
+        day = d;
+        year = y;
+    }
+
+    public SmartDate(String str) {
+        String[] array = new String[3];
+        if (str.contains("/"))
+            array = str.split("/");
+        else
+            array = str.split(" ");
+        int y = Integer.parseInt(array[0]);
+        int m = Integer.parseInt(array[1]);
+        int d = Integer.parseInt(array[2]);
         if (y < 0)
             throw new IllegalArgumentException("The year is illegal!");
         if (m > 12 || m < 1)
@@ -80,6 +110,7 @@ class SmartDate {
         return year;
     }
 
+    @Override
     public String toString() {
         return month() + "/" + day() + "/" + year();
     }
@@ -135,5 +166,68 @@ class SmartDate {
             break;
         }
         return day;
+    }
+}
+
+class Transaction {
+    private final String who;
+    private final SmartDate when;
+    private final double amount;
+
+    public Transaction(String who, SmartDate when, double amount) {
+        if (Double.isNaN(amount) || Double.isInfinite(amount))
+            throw new IllegalArgumentException("The amount can't be none or infinite!");
+        this.who = who;
+        this.when = when;
+        this.amount = amount;
+    }
+
+    public Transaction(String input) {
+        String[] array = input.split(" ");
+        if (Double.isNaN(Double.parseDouble(array[2])) || Double.isInfinite(Double.parseDouble(array[2])))
+            throw new IllegalArgumentException("The amount can't be none or infinite!");
+        this.who = array[0];
+        this.when = new SmartDate(array[1]);
+        this.amount = Double.parseDouble(array[2]);
+    }
+
+    public String who() {
+        return this.who;
+    }
+
+    public SmartDate when() {
+        return this.when;
+    }
+
+    public Double amount() {
+        return this.amount;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%-10s %10s %8.2f", this.who, this.when, this.amount);
+    }
+
+    public int compareTo(Transaction that) {
+        return Double.compare(this.amount, that.amount);
+    }
+
+    public boolean equals(Object other) {
+        if (other == this)
+            return true;
+        if (other == null)
+            return false;
+        if (other.getClass() != this.getClass())
+            return false;
+        Transaction that = (Transaction) other;
+        return (this.amount == that.amount) && (this.who.equals(that.who)) && (this.when.equals(that.when));
+    }
+
+    public int hashCode() {
+        int hash = 1;
+        hash = 31 * hash + who.hashCode();
+        hash = 31 * hash + when.hashCode();
+        hash = 31 * hash + ((Double) amount).hashCode();
+        return hash;
     }
 }
