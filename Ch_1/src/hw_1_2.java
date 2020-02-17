@@ -9,6 +9,15 @@ class Solution {
         else
             return false;
     }
+
+    public int[] readInts(String input) {
+        String[] arr = input.split("\\s+");
+        int[] output = new int[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            output[i] = Integer.parseInt(arr[i]);
+        }
+        return output;
+    }
 }
 
 class VirtualCounter {
@@ -74,7 +83,7 @@ class SmartDate {
         if (str.contains("/"))
             array = str.split("/");
         else
-            array = str.split(" ");
+            array = str.split("\\s+");
         int y = Integer.parseInt(array[0]);
         int m = Integer.parseInt(array[1]);
         int d = Integer.parseInt(array[2]);
@@ -183,7 +192,7 @@ class Transaction {
     }
 
     public Transaction(String input) {
-        String[] array = input.split(" ");
+        String[] array = input.split("\\s+");
         if (Double.isNaN(Double.parseDouble(array[2])) || Double.isInfinite(Double.parseDouble(array[2])))
             throw new IllegalArgumentException("The amount can't be none or infinite!");
         this.who = array[0];
@@ -229,5 +238,53 @@ class Transaction {
         hash = 31 * hash + when.hashCode();
         hash = 31 * hash + ((Double) amount).hashCode();
         return hash;
+    }
+}
+
+class Rational {
+    private final int numerator;
+    private final int denominator;
+
+    public Rational(int numerator, int denominator) {
+        if (denominator == 0)
+            throw new IllegalArgumentException("The denominator can't be 0 or infinity!");
+        this.numerator = numerator;
+        this.denominator = denominator;
+    }
+
+    public Rational plus(Rational that) {
+        int num_out = this.numerator * that.denominator + that.numerator * this.denominator;
+        int den_out = this.denominator * that.denominator;
+        return new Rational(num_out, den_out);
+    }
+
+    public Rational minus(Rational that) {
+        int num_out = this.numerator * that.denominator - that.numerator * this.denominator;
+        int den_out = this.denominator * that.denominator;
+        return new Rational(num_out, den_out);
+    }
+
+    public Rational times(Rational that) {
+        int num_out = this.numerator * that.numerator;
+        int den_out = this.denominator * that.denominator;
+        return new Rational(num_out, den_out);
+    }
+    
+    public Rational divides(Rational that) {
+        int num_out = this.numerator * that.denominator;
+        int den_out = this.denominator * that.numerator;
+        return new Rational(num_out, den_out);
+    }
+
+    public boolean equals(Rational that) {
+        if (divides(that).denominator == divides(that).numerator)
+            return true;
+        else
+            return false;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("%d / %d", this.numerator, this.denominator);
     }
 }
