@@ -1,4 +1,4 @@
-package Ch_1;
+package Ch_1.src;
 import java.util.*;
 
 class Solution {
