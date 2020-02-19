@@ -34,30 +34,54 @@ class FixedCapacityStackOfStrings {
 
 class Parentheses {
     public static boolean isBalanced(String s) {
+
         Stack<Character> iStack = new Stack<>();
         int sign = 1;
         char[] array = s.toCharArray();
+        if (array.length % 2 != 0)
+            return false;
         for (int i = 0; i < array.length; i++) {
             if (array[i] == '{' || array[i] == '[' || array[i] == '(') {
                 iStack.push(array[i]);
             } else if (array[i] == '}' || array[i] == ']' || array[i] == ')') {
+                if (iStack.isEmpty())
+                    return false;
                 char pop = iStack.pop();
-                if (pop == '(' && array[i] != ')') {
-                    sign--;
-                    break;
-                } else if (pop == '[' && array[i] != ']') {
-                    sign--;
-                    break;
-                } else if (pop == '[' && array[i] != ']') {
-                    sign--;
-                    break;
+                if (array[i] == ')') {
+                    if (pop != '(') {
+                        sign--;
+                        break;
+                    }
+                } else if (array[i] == ']') {
+                    if (pop != '[') {
+                        sign--;
+                        break;
+                    } else {
+                        if (!iStack.isEmpty())
+                            if (iStack.peek() == '(') {
+                                sign--;
+                                break;
+                            }
+                    }
+                } else {
+                    if (pop != '{') {
+                        sign--;
+                        break;
+                    } else {
+                        if (!iStack.isEmpty())
+                            if (iStack.peek() == '(' || iStack.peek() == '[') {
+                                sign--;
+                                break;
+                            }
+                    }
                 }
+
             }
         }
-        if (sign == 1)
-            return true;
-        else
+        if (!iStack.isEmpty() || sign != 1)
             return false;
+        else
+            return true;
     }
 
     public static void main(String[] args) {
@@ -75,34 +99,33 @@ class Parentheses {
 }
 
 class ResizingArrayStack<Item> implements Iterable<Item> {
-    private Item[] a = (Item[]) new Object[1]; // stack items 
+    private Item[] a = (Item[]) new Object[1]; // stack items
     private int N = 0;
 
     public boolean isEmpty() {
         return N == 0;
     }
 
-    public int size()
-    {
+    public int size() {
         return N;
     }
 
-    private void resize(int max) { // Move stack to a new array of size max. 
+    private void resize(int max) { // Move stack to a new array of size max.
         Item[] temp = (Item[]) new Object[max];
         for (int i = 0; i < N; i++)
             temp[i] = a[i];
         a = temp;
     }
 
-    public void push(Item item) { // Add item to top of stack. 
+    public void push(Item item) { // Add item to top of stack.
         if (N == a.length)
             resize(2 * a.length);
         a[N++] = item;
     }
 
-    public Item pop() { // Remove item from top of stack. 
+    public Item pop() { // Remove item from top of stack.
         Item item = a[--N];
-        a[N] = null; // Avoid loitering (see text). 
+        a[N] = null; // Avoid loitering (see text).
         if (N > 0 && N == a.length / 4)
             resize(a.length / 2);
         return item;
@@ -126,7 +149,9 @@ class ResizingArrayStack<Item> implements Iterable<Item> {
         public Item next() {
             return a[--i];
         }
-        public void remove(){}
+
+        public void remove() {
+        }
     }
 }
 
