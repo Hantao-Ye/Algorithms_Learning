@@ -129,3 +129,14 @@ class ResizingArrayStack<Item> implements Iterable<Item> {
         public void remove(){}
     }
 }
+
+class Solution {
+    public static String outFullString(String input) {
+        StringBuffer sBuffer = new StringBuffer();
+        char[] array = input.toCharArray();
+        for (int i = 0; i < array.length; i++) {
+
+        }
+        return sBuffer.toString();
+    }
+}
