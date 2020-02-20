@@ -98,7 +98,7 @@ class Parentheses {
     }
 }
 
-class Stack<Item> implements Iterable<Item> {
+class my_Stack<Item> implements Iterable<Item> {
     private Node<Item> first; // top of stack
     private int n; // size of the stack
 
@@ -107,7 +107,7 @@ class Stack<Item> implements Iterable<Item> {
         private Node<Item> next;
     }
 
-    public Stack() {
+    public my_Stack() {
         first = null;
         n = 0;
     }
@@ -178,5 +178,52 @@ class Stack<Item> implements Iterable<Item> {
             current = current.next;
             return item;
         }
+    }
+}
+
+class InfixToPostfix {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            change(sc.nextLine());
+        }
+        sc.close();
+    }
+
+    public static void change(String input) {
+        Stack<Character> iStack = new Stack<>();
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) == '+' || input.charAt(i) == '*')
+                iStack.push(input.charAt(i));
+            else if (input.charAt(i) == ')')
+                System.out.print(iStack.pop() + " ");
+            else if (input.charAt(i) == '(')
+                System.out.print("");
+            else
+                System.out.print(input.charAt(i));
+        }
+    }
+}
+
+class EvaluatePostfix {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            System.out.println(evaluate(sc.nextLine()));
+        }
+        sc.close();
+    }
+
+    public static int evaluate(String input) {
+        Stack<Integer> iStack = new Stack<>();
+        for (int i = 0; i < input.length(); i++) {
+            if (input.charAt(i) >= '0' && input.charAt(i) <= '9')
+                iStack.push(Integer.valueOf(input.charAt(i)));
+            else if (input.charAt(i) == '+')
+                iStack.push(iStack.pop() + iStack.pop());
+            else if (input.charAt(i) == '*')
+                iStack.push(iStack.pop() * iStack.pop());
+        }
+        return iStack.pop();
     }
 }
