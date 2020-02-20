@@ -98,70 +98,85 @@ class Parentheses {
     }
 }
 
-class ResizingArrayStack<Item> implements Iterable<Item> {
-    private Item[] a = (Item[]) new Object[1]; // stack items
-    private int N = 0;
+class Stack<Item> implements Iterable<Item> {
+    private Node<Item> first; // top of stack
+    private int n; // size of the stack
+
+    private static class Node<Item> {
+        private Item item;
+        private Node<Item> next;
+    }
+
+    public Stack() {
+        first = null;
+        n = 0;
+    }
 
     public boolean isEmpty() {
-        return N == 0;
+        return first == null;
     }
 
     public int size() {
-        return N;
+        return n;
     }
 
-    private void resize(int max) { // Move stack to a new array of size max.
-        Item[] temp = (Item[]) new Object[max];
-        for (int i = 0; i < N; i++)
-            temp[i] = a[i];
-        a = temp;
+    public void push(Item item) {
+        Node<Item> oldfirst = first;
+        first = new Node<Item>();
+        first.item = item;
+        first.next = oldfirst;
+        n++;
     }
 
-    public void push(Item item) { // Add item to top of stack.
-        if (N == a.length)
-            resize(2 * a.length);
-        a[N++] = item;
-    }
-
-    public Item pop() { // Remove item from top of stack.
-        Item item = a[--N];
-        a[N] = null; // Avoid loitering (see text).
-        if (N > 0 && N == a.length / 4)
-            resize(a.length / 2);
-        return item;
+    public Item pop() {
+        if (isEmpty())
+            throw new NoSuchElementException("Stack underflow");
+        Item item = first.item; // save item to return
+        first = first.next; // delete first node
+        n--;
+        return item; // return the saved item
     }
 
     public Item peek() {
-        return a[N];
+        if (isEmpty())
+            throw new NoSuchElementException("Stack underflow");
+        return first.item;
+    }
+
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (Item item : this) {
+            s.append(item);
+            s.append(' ');
+        }
+        return s.toString();
     }
 
     public Iterator<Item> iterator() {
-        return new ReverseArrayIterator();
+        return new LinkedIterator(first);
     }
 
-    private class ReverseArrayIterator implements Iterator<Item> { // Support LIFO iteration.
-        private int i = N;
+    private class LinkedIterator implements Iterator<Item> {
+        private Node<Item> current;
 
-        public boolean hasNext() {
-            return i > 0;
+        public LinkedIterator(Node<Item> first) {
+            current = first;
         }
 
-        public Item next() {
-            return a[--i];
+        public boolean hasNext() {
+            return current != null;
         }
 
         public void remove() {
+            throw new UnsupportedOperationException();
         }
-    }
-}
 
-class Solution {
-    public static String outFullString(String input) {
-        StringBuffer sBuffer = new StringBuffer();
-        char[] array = input.toCharArray();
-        for (int i = 0; i < array.length; i++) {
-
+        public Item next() {
+            if (!hasNext())
+                throw new NoSuchElementException();
+            Item item = current.item;
+            current = current.next;
+            return item;
         }
-        return sBuffer.toString();
     }
 }
