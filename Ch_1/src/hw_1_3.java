@@ -312,3 +312,23 @@ class Josephus {
     }
 }
 
+class CheckStack {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNext()) {
+            String[] array = sc.nextLine().split(" ");
+            int check = 0;
+            for (int i = 0; i < array.length; i++) {
+                if(array[i]=="-")
+                    check--;
+                else {
+                    check++;
+                }
+                if (check < 0) {
+                    System.out.println("Stack underflow");
+                }
+            }
+        }
+        sc.close();
+    }
+}
