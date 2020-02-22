@@ -99,8 +99,8 @@ class Parentheses {
 }
 
 class my_Stack<Item> implements Iterable<Item> {
-    private Node<Item> first; // top of stack
-    private int n; // size of the stack
+    Node<Item> first; // top of stack
+    int n; // size of the stack
 
     private static class Node<Item> {
         private Item item;
@@ -296,3 +296,19 @@ class ResizingArrayQueueOfStrings implements Iterable<String> {
         }
     }
 }
+
+class Josephus {
+    public static void main(String[] args) {
+        int n = Integer.valueOf(args[0]);
+        int m = Integer.valueOf(args[1]);
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < n; i++)
+            queue.add(i);
+        while (queue.size() > 0) {
+            for (int i = 0; i < m - 1; i++)
+                queue.add(queue.remove());
+            System.out.print(queue.remove() + " ");
+        }
+    }
+}
+
